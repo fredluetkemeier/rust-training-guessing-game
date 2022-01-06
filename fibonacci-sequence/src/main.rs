@@ -4,21 +4,23 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let index: u64 = args[1].parse().expect("I need a positive integer!");
 
-    let mut last = 0;
-    let mut current = 1;
+    println!("0\n1");
 
-    println!("{}\n{}", last, current);
-
-    for _ in 1..index {
-        let next = next_in_sequence(last, current);
-
-        println!("{}", next);
-
-        last = current;
-        current = next;
-    }
+    next_in_sequence(&|x| x == index, 0, (0, 1));
 }
 
-fn next_in_sequence(last: u128, current: u128) -> u128 {
-    last + current
+fn next_in_sequence(
+    is_at_limit: &dyn Fn(u64) -> bool,
+    count: u64,
+    (last, current): (u128, u128),
+) -> u128 {
+    let next = last + current;
+
+    println!("{}", next);
+
+    if is_at_limit(count) {
+        return next;
+    }
+
+    return next_in_sequence(is_at_limit, count + 1, (current, next));
 }
